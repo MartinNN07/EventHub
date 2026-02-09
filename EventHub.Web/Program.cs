@@ -1,5 +1,6 @@
 using EventHub.Data;
 using EventHub.Data.Models;
+using EventHub.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Web
@@ -51,7 +52,22 @@ namespace EventHub.Web
 				pattern: "{controller=Home}/{action=Index}/{id?}")
 				.WithStaticAssets();
 
-			app.Run();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    Seeder.SeedAsync(services);
+                }
+                catch (Exception ex)
+                {
+                    // Тук може да логнеш грешка, ако се появи при сийдване
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Възникна грешка при зареждане на първоначалните данни.");
+                }
+            }
+
+            app.Run();
 		}
 	}
 }
