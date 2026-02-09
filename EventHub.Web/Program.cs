@@ -1,3 +1,7 @@
+using EventHub.Data;
+using EventHub.Data.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace EventHub.Web
 {
 	public class Program
@@ -7,6 +11,23 @@ namespace EventHub.Web
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddControllersWithViews();
+
+			var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+			builder.Services.AddDbContext<ApplicationDbContext>(options =>
+				options.UseSqlServer(connectionString));
+
+			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+			builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
+				options.SignIn.RequireConfirmedAccount = false;
+				options.Password.RequireDigit = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+			})
+				.AddEntityFrameworkStores<ApplicationDbContext>();
+
 			builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
