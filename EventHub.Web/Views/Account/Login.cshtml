@@ -1,0 +1,99 @@
+@model EventHub.Web.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-gradient text-white py-4 text-center">
+                    <h2 class="mb-0">
+                        <i class="bi bi-box-arrow-in-right"></i> Welcome Back
+                    </h2>
+                    <p class="mb-0 mt-2">Sign in to your EventHub account</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ReturnUrl" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email Address
+                            </label>
+                            <input asp-for="Email" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Enter your email"
+                                   autofocus />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <input asp-for="Password" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Enter your password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input asp-for="RememberMe" class="form-check-input" />
+                                    <label asp-for="RememberMe" class="form-check-label">
+                                        Remember me
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a asp-action="ForgotPassword" class="text-decoration-none">
+                                    Forgot password?
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Don't have an account? 
+                            <a asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
+                                <strong>Create one now</strong>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="card mt-4 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <p class="mb-2">
+                        <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                    </p>
+                    <h6 class="mb-2">Secure Sign In</h6>
+                    <p class="text-muted mb-0 small">
+                        Your information is protected with industry-standard security
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
