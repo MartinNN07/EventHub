@@ -10,8 +10,4 @@
     <ProjectReference Include="..\EventHub.Data\EventHub.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

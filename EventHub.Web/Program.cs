@@ -1,6 +1,8 @@
 using EventHub.Data;
 using EventHub.Data.Models;
 using EventHub.Data.Seeding;
+using EventHub.Services.Implementations;
+using EventHub.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Web
@@ -17,6 +19,11 @@ namespace EventHub.Web
 			var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(connectionString));
+
+			builder.Services.AddScoped<IEventService, EventService>();
+			builder.Services.AddScoped<IBookingService, BookingService>();
+			builder.Services.AddScoped<ICategoryService, CategoryService>();
+			builder.Services.AddScoped<IVenueService, VenueService>();
 
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

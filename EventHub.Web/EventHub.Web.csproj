@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventHub.Data\EventHub.Data.csproj" />
+    <ProjectReference Include="..\EventHub.Services\EventHub.Services.csproj" />
   </ItemGroup>
 
 </Project>
