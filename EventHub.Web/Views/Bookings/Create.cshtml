@@ -1,0 +1,260 @@
+@model EventHub.Web.Models.CreateBookingViewModel
+
+@{
+    ViewData["Title"] = "Book Event";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="mb-4">
+                <a href="@Url.Action("Details", "Events", new { id = Model.EventId })" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Event
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-gradient text-white py-3">
+                    <h2 class="mb-0">
+                        <i class="bi bi-ticket-perforated"></i> Book Your Tickets
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    @if (!Model.IsAvailable)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Event Sold Out</strong> - There are no tickets available for this event.
+                        </div>
+                    }
+                    else if (Model.IsEventPassed)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Event Has Passed</strong> - This event has already occurred.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                @if (!string.IsNullOrEmpty(Model.EventImageUrl))
+                                {
+                                    <img src="@Model.EventImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.EventTitle">
+                                }
+                                else
+                                {
+                                    <div class="bg-gradient rounded shadow-sm" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-calendar-event text-white" style="font-size: 4rem;"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <h3 class="text-gradient mb-3">@Model.EventTitle</h3>
+                                <p class="mb-2">
+                                    <i class="bi bi-person text-primary"></i>
+                                    <strong>Organizer:</strong> @Model.EventOrganizer
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-calendar3 text-primary"></i>
+                                    <strong>Date:</strong> @Model.EventDate.ToString("dddd, MMMM dd, yyyy")
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-clock text-primary"></i>
+                                    <strong>Time:</strong> @Model.EventDate.ToString("h:mm tt")
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-geo-alt text-primary"></i>
+                                    <strong>Venue:</strong> @Model.VenueName
+                                    <br>
+                                    <small class="text-muted ms-4">@Model.VenueAddress</small>
+                                </p>
+                                <p class="mb-0">
+                                    <i class="bi bi-ticket-detailed text-primary"></i>
+                                    <strong>Available Tickets:</strong>
+                                    <span class="badge bg-success" id="availableTicketsDisplay">@Model.AvailableTickets</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <form asp-action="Create" method="post" id="bookingForm">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="EventId" />
+                            
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label asp-for="TicketsCount" class="form-label">
+                                        <i class="bi bi-ticket"></i> Number of Tickets
+                                    </label>
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-outline-secondary" id="decreaseBtn">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <input asp-for="TicketsCount" 
+                                               class="form-control text-center" 
+                                               id="ticketsInput"
+                                               min="1" 
+                                               max="@Model.AvailableTickets"
+                                               data-max-tickets="@Model.AvailableTickets"
+                                               data-event-id="@Model.EventId" />
+                                        <button type="button" class="btn btn-outline-secondary" id="increaseBtn">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="TicketsCount" class="text-danger"></span>
+                                    <small class="form-text text-muted">Maximum 20 tickets per booking</small>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Ticket Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="bi bi-currency-dollar"></i>
+                                        </span>
+                                        <input type="text" class="form-control" value="@Model.TicketPrice.ToString("N2")" readonly>
+                                        <span class="input-group-text bg-light">per ticket</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light mb-4">
+                                <div class="card-body">
+                                    <h5 class="mb-3">Order Summary</h5>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Tickets (<span id="ticketCount">@Model.TicketsCount</span>)</span>
+                                        <span id="subtotal">@Model.TotalPrice.ToString("C")</span>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <strong class="h5 mb-0">Total</strong>
+                                        <strong class="h5 mb-0 text-gradient" id="totalPrice">@Model.TotalPrice.ToString("C")</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="availabilityAlert" class="alert alert-warning d-none">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <span id="availabilityMessage"></span>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                    <i class="bi bi-credit-card me-2"></i>
+                                    Complete Booking
+                                </button>
+                                <a href="@Url.Action("Details", "Events", new { id = Model.EventId })" class="btn btn-outline-secondary">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+
+            @if (Model.IsAvailable && !Model.IsEventPassed)
+            {
+                <div class="card mt-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-info-circle text-primary"></i> Booking Information
+                        </h5>
+                        <ul class="mb-0">
+                            <li>Tickets are non-refundable but can be cancelled up to 24 hours before the event</li>
+                            <li>You will receive a confirmation email with your booking details</li>
+                            <li>Please arrive at least 15 minutes before the event starts</li>
+                            <li>Bring a valid ID for entry verification</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        const ticketPrice = @Model.TicketPrice;
+        const maxTickets = @Model.AvailableTickets;
+        const eventId = @Model.EventId;
+
+        const ticketsInput = document.getElementById('ticketsInput');
+        const decreaseBtn = document.getElementById('decreaseBtn');
+        const increaseBtn = document.getElementById('increaseBtn');
+        const ticketCountDisplay = document.getElementById('ticketCount');
+        const subtotalDisplay = document.getElementById('subtotal');
+        const totalPriceDisplay = document.getElementById('totalPrice');
+        const availableTicketsDisplay = document.getElementById('availableTicketsDisplay');
+        const availabilityAlert = document.getElementById('availabilityAlert');
+        const availabilityMessage = document.getElementById('availabilityMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function updatePrice() {
+            const tickets = parseInt(ticketsInput.value) || 1;
+            const total = tickets * ticketPrice;
+            
+            ticketCountDisplay.textContent = tickets;
+            subtotalDisplay.textContent = '$' + total.toFixed(2);
+            totalPriceDisplay.textContent = '$' + total.toFixed(2);
+        }
+
+        function checkAvailability() {
+            const tickets = parseInt(ticketsInput.value) || 1;
+            
+            fetch(`@Url.Action("CheckAvailability", "Bookings")?eventId=${eventId}&ticketsCount=${tickets}`)
+                .then(response => response.json())
+                .then(data => {
+                    availableTicketsDisplay.textContent = data.availableTickets;
+                    
+                    if (!data.success) {
+                        availabilityAlert.classList.remove('d-none');
+                        availabilityMessage.textContent = data.message;
+                        submitBtn.disabled = true;
+                    } else {
+                        availabilityAlert.classList.add('d-none');
+                        submitBtn.disabled = false;
+                    }
+                    
+                    ticketsInput.max = data.availableTickets;
+                })
+                .catch(error => {
+                    console.error('Error checking availability:', error);
+                });
+        }
+
+        increaseBtn.addEventListener('click', () => {
+            let current = parseInt(ticketsInput.value) || 1;
+            if (current < Math.min(20, maxTickets)) {
+                ticketsInput.value = current + 1;
+                updatePrice();
+                checkAvailability();
+            }
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let current = parseInt(ticketsInput.value) || 1;
+            if (current > 1) {
+                ticketsInput.value = current - 1;
+                updatePrice();
+                checkAvailability();
+            }
+        });
+
+        ticketsInput.addEventListener('change', () => {
+            let value = parseInt(ticketsInput.value) || 1;
+            value = Math.max(1, Math.min(value, Math.min(20, maxTickets)));
+            ticketsInput.value = value;
+            updatePrice();
+            checkAvailability();
+        });
+
+        checkAvailability();
+
+        setInterval(checkAvailability, 30000);
+    </script>
+}

@@ -62,5 +62,50 @@ namespace EventHub.Web.Extensions
 				EventCount = category.Events?.Count ?? 0
 			};
 		}
+
+		public static BookingViewModel ToViewModel(this Booking booking)
+		{
+			var eventDate = booking.Event?.Date ?? DateTime.MinValue;
+			var canCancel = eventDate > DateTime.Now.AddDays(1);
+
+			return new BookingViewModel
+			{
+				Id = booking.Id,
+				BookingDate = booking.BookingDate,
+				TicketsCount = booking.TicketsCount,
+				TotalPrice = booking.TicketsCount * (booking.Event?.TicketPrice ?? 0),
+				EventId = booking.EventId,
+				EventTitle = booking.Event?.Title ?? "Unknown",
+				EventOrganizer = booking.Event?.Organizer ?? "Unknown",
+				EventDate = eventDate,
+				TicketPrice = booking.Event?.TicketPrice ?? 0,
+				EventImageUrl = booking.Event?.ImageUrl,
+				VenueName = booking.Event?.Venue?.Name ?? "Unknown",
+				VenueAddress = booking.Event?.Venue?.Address ?? "Unknown",
+				CanCancel = canCancel,
+				StatusBadgeClass = eventDate > DateTime.Now ? "bg-success" : "bg-secondary",
+				StatusText = eventDate > DateTime.Now ? "Confirmed" : "Completed"
+			};
+		}
+
+		public static BookingConfirmationViewModel ToConfirmationViewModel(this Booking booking, string userEmail)
+		{
+			return new BookingConfirmationViewModel
+			{
+				BookingId = booking.Id,
+				BookingDate = booking.BookingDate,
+				TicketsCount = booking.TicketsCount,
+				TotalPrice = booking.TicketsCount * (booking.Event?.TicketPrice ?? 0),
+				EventId = booking.EventId,
+				EventTitle = booking.Event?.Title ?? "Unknown",
+				EventOrganizer = booking.Event?.Organizer ?? "Unknown",
+				EventDate = booking.Event?.Date ?? DateTime.MinValue,
+				EventImageUrl = booking.Event?.ImageUrl,
+				VenueName = booking.Event?.Venue?.Name ?? "Unknown",
+				VenueAddress = booking.Event?.Venue?.Address ?? "Unknown",
+				ConfirmationNumber = $"EVT-{booking.Id:D6}",
+				UserEmail = userEmail
+			};
+		}
 	}
 }
