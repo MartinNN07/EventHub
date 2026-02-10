@@ -1,0 +1,221 @@
+@model EventHub.Web.Models.BookingConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Booking Confirmation";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="text-center mb-4 fade-in">
+                <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 100px; height: 100px;">
+                    <i class="bi bi-check-circle text-white" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-4 text-gradient mb-2">Booking Confirmed!</h1>
+                <p class="lead text-muted">Your tickets have been successfully reserved</p>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4 fade-in" style="animation-delay: 0.2s;">
+                <div class="card-header bg-gradient text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="bi bi-ticket-perforated-fill"></i> Booking Details
+                        </h4>
+                        <span class="badge bg-light text-dark">@Model.ConfirmationNumber</span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            @if (!string.IsNullOrEmpty(Model.EventImageUrl))
+                            {
+                                <img src="@Model.EventImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.EventTitle">
+                            }
+                            else
+                            {
+                                <div class="bg-gradient rounded shadow-sm" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-calendar-event text-white" style="font-size: 4rem;"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="mb-3">@Model.EventTitle</h3>
+                            
+                            <div class="mb-3">
+                                <p class="mb-2">
+                                    <i class="bi bi-person-fill text-primary me-2"></i>
+                                    <strong>Organizer:</strong> @Model.EventOrganizer
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-calendar3 text-primary me-2"></i>
+                                    <strong>Date:</strong> @Model.EventDate.ToString("dddd, MMMM dd, yyyy")
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-clock text-primary me-2"></i>
+                                    <strong>Time:</strong> @Model.EventDate.ToString("h:mm tt")
+                                </p>
+                                <p class="mb-2">
+                                    <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                    <strong>Location:</strong> @Model.VenueName
+                                    <br>
+                                    <small class="text-muted ms-4">@Model.VenueAddress</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Booking Information</h5>
+                            <p class="mb-2">
+                                <strong>Confirmation Number:</strong><br>
+                                <span class="badge bg-primary">@Model.ConfirmationNumber</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Booking Date:</strong><br>
+                                @Model.BookingDate.ToString("MMMM dd, yyyy - h:mm tt")
+                            </p>
+                            <p class="mb-2">
+                                <strong>Email:</strong><br>
+                                @Model.UserEmail
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Order Summary</h5>
+                            <div class="bg-light p-3 rounded">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Number of Tickets:</span>
+                                    <strong>@Model.TicketsCount</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Price per Ticket:</span>
+                                    <strong>@((Model.TotalPrice / Model.TicketsCount).ToString("C"))</strong>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong class="h5 mb-0">Total Paid:</strong>
+                                    <strong class="h5 mb-0 text-gradient">@Model.TotalPrice.ToString("C")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="bi bi-info-circle-fill me-2"></i>Important Information
+                        </h6>
+                        <ul class="mb-0">
+                            <li>A confirmation email has been sent to <strong>@Model.UserEmail</strong></li>
+                            <li>Please save your confirmation number: <strong>@Model.ConfirmationNumber</strong></li>
+                            <li>Bring a valid ID to the event for verification</li>
+                            <li>Arrive at least 15 minutes before the event starts</li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Index", "Bookings")" class="btn btn-primary w-100">
+                                <i class="bi bi-ticket-perforated"></i> My Bookings
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Details", "Events", new { id = Model.EventId })" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-eye"></i> Event Details
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Index", "Events")" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-search"></i> Browse Events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm fade-in" style="animation-delay: 0.4s;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-list-check text-primary"></i> What's Next?
+                    </h5>
+                    <ol class="mb-0">
+                        <li class="mb-2">
+                            <strong>Check your email</strong> - You'll receive a confirmation email with all the details
+                        </li>
+                        <li class="mb-2">
+                            <strong>Add to calendar</strong> - Don't forget to mark the event date on your calendar
+                        </li>
+                        <li class="mb-2">
+                            <strong>Prepare for the event</strong> - Review the venue location and plan your arrival
+                        </li>
+                        <li>
+                            <strong>Enjoy the event!</strong> - We hope you have a wonderful experience
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 fade-in" style="animation-delay: 0.6s;">
+                <p class="text-muted">Share this event with friends!</p>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary" onclick="shareOnSocial('facebook')">
+                        <i class="bi bi-facebook"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-info" onclick="shareOnSocial('twitter')">
+                        <i class="bi bi-twitter"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-success" onclick="shareOnSocial('whatsapp')">
+                        <i class="bi bi-whatsapp"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="copyLink()">
+                        <i class="bi bi-link-45deg"></i> Copy Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const eventUrl = '@Url.Action("Details", "Events", new { id = Model.EventId }, Context.Request.Scheme)';
+        const eventTitle = '@Model.EventTitle';
+
+        function shareOnSocial(platform) {
+            let shareUrl = '';
+            const encodedUrl = encodeURIComponent(eventUrl);
+            const encodedTitle = encodeURIComponent(eventTitle);
+
+            switch(platform) {
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+                    break;
+            }
+
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(eventUrl).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Print function
+        function printConfirmation() {
+            window.print();
+        }
+    </script>
+}
