@@ -176,85 +176,63 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
     <script>
-        const ticketPrice = @Model.TicketPrice;
-        const maxTickets = @Model.AvailableTickets;
-        const eventId = @Model.EventId;
+        document.addEventListener('DOMContentLoaded', function() {
+            const ticketPrice = parseFloat('@Model.TicketPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)');
+            const maxTickets = @Model.AvailableTickets;
 
-        const ticketsInput = document.getElementById('ticketsInput');
-        const decreaseBtn = document.getElementById('decreaseBtn');
-        const increaseBtn = document.getElementById('increaseBtn');
-        const ticketCountDisplay = document.getElementById('ticketCount');
-        const subtotalDisplay = document.getElementById('subtotal');
-        const totalPriceDisplay = document.getElementById('totalPrice');
-        const availableTicketsDisplay = document.getElementById('availableTicketsDisplay');
-        const availabilityAlert = document.getElementById('availabilityAlert');
-        const availabilityMessage = document.getElementById('availabilityMessage');
-        const submitBtn = document.getElementById('submitBtn');
+            const ticketsInput = document.getElementById('ticketsInput');
+            const ticketCountDisplay = document.getElementById('ticketCount');
+            const subtotalDisplay = document.getElementById('subtotal');
+            const totalPriceDisplay = document.getElementById('totalPrice');
 
-        function updatePrice() {
-            const tickets = parseInt(ticketsInput.value) || 1;
-            const total = tickets * ticketPrice;
-            
-            ticketCountDisplay.textContent = tickets;
-            subtotalDisplay.textContent = '$' + total.toFixed(2);
-            totalPriceDisplay.textContent = '$' + total.toFixed(2);
-        }
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const increaseBtn = document.getElementById('increaseBtn');
 
-        function checkAvailability() {
-            const tickets = parseInt(ticketsInput.value) || 1;
-            
-            fetch(`@Url.Action("CheckAvailability", "Bookings")?eventId=${eventId}&ticketsCount=${tickets}`)
-                .then(response => response.json())
-                .then(data => {
-                    availableTicketsDisplay.textContent = data.availableTickets;
-                    
-                    if (!data.success) {
-                        availabilityAlert.classList.remove('d-none');
-                        availabilityMessage.textContent = data.message;
-                        submitBtn.disabled = true;
-                    } else {
-                        availabilityAlert.classList.add('d-none');
-                        submitBtn.disabled = false;
+            function updatePrice() {
+                let tickets = parseInt(ticketsInput.value) || 0;
+
+                if (tickets < 1) tickets = 1;
+                if (tickets > maxTickets) tickets = maxTickets;
+                if (tickets > 20) tickets = 20;
+
+                ticketsInput.value = tickets;
+
+                const total = tickets * ticketPrice;
+
+                ticketCountDisplay.textContent = tickets;
+                const formattedTotal = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                subtotalDisplay.textContent = formattedTotal;
+                totalPriceDisplay.textContent = formattedTotal;
+            }
+
+            if (decreaseBtn) {
+                decreaseBtn.addEventListener('click', function() {
+                    let current = parseInt(ticketsInput.value) || 0;
+                    if (current > 1) {
+                        ticketsInput.value = current - 1;
+                        updatePrice();
                     }
-                    
-                    ticketsInput.max = data.availableTickets;
-                })
-                .catch(error => {
-                    console.error('Error checking availability:', error);
                 });
-        }
+            }
 
-        increaseBtn.addEventListener('click', () => {
-            let current = parseInt(ticketsInput.value) || 1;
-            if (current < Math.min(20, maxTickets)) {
-                ticketsInput.value = current + 1;
-                updatePrice();
-                checkAvailability();
+            if (increaseBtn) {
+                increaseBtn.addEventListener('click', function() {
+                    let current = parseInt(ticketsInput.value) || 0;
+                    if (current < maxTickets && current < 20) {
+                        ticketsInput.value = current + 1;
+                        updatePrice();
+                    }
+                });
+            }
+
+            if (ticketsInput) {
+                ticketsInput.addEventListener('change', updatePrice);
+                ticketsInput.addEventListener('keyup', updatePrice);
             }
         });
-
-        decreaseBtn.addEventListener('click', () => {
-            let current = parseInt(ticketsInput.value) || 1;
-            if (current > 1) {
-                ticketsInput.value = current - 1;
-                updatePrice();
-                checkAvailability();
-            }
-        });
-
-        ticketsInput.addEventListener('change', () => {
-            let value = parseInt(ticketsInput.value) || 1;
-            value = Math.max(1, Math.min(value, Math.min(20, maxTickets)));
-            ticketsInput.value = value;
-            updatePrice();
-            checkAvailability();
-        });
-
-        checkAvailability();
-
-        setInterval(checkAvailability, 30000);
     </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

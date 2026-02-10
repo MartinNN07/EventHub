@@ -67,24 +67,24 @@ namespace EventHub.Web.Controllers
 		}
 
 		// GET: Bookings/Create/5
-		public async Task<IActionResult> Create(int id)
+		public async Task<IActionResult> Create(int eventId)
 		{
 			try
 			{
-				var eventItem = await _eventService.GetEventByIdAsync(id);
+				var eventItem = await _eventService.GetEventByIdAsync(eventId);
 				if (eventItem == null)
 				{
 					TempData["Error"] = "Event not found.";
 					return RedirectToAction("Index", "Events");
 				}
 
-				var availableTickets = await _eventService.GetAvailableTicketsAsync(id);
-				var isBookable = await _eventService.IsEventBookableAsync(id);
+				var availableTickets = await _eventService.GetAvailableTicketsAsync(eventId);
+				var isBookable = await _eventService.IsEventBookableAsync(eventId);
 
 				if (!isBookable)
 				{
 					TempData["Error"] = "This event is not available for booking.";
-					return RedirectToAction("Details", "Events", new { id });
+					return RedirectToAction("Details", "Events", new { eventId });
 				}
 
 				var viewModel = new CreateBookingViewModel
@@ -108,7 +108,7 @@ namespace EventHub.Web.Controllers
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Error loading booking form for event ID {EventId}", id);
+				_logger.LogError(ex, "Error loading booking form for event ID {EventId}", eventId);
 				TempData["Error"] = "Unable to load booking form.";
 				return RedirectToAction("Index", "Events");
 			}

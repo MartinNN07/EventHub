@@ -5,6 +5,7 @@ namespace EventHub.Web.Extensions
 {
 	public static class MappingExtensions
 	{
+		// Event mappings
 		public static EventViewModel ToViewModel(this Event eventEntity, int availableTickets = 0, bool isBookable = false)
 		{
 			return new EventViewModel
@@ -63,28 +64,28 @@ namespace EventHub.Web.Extensions
 			};
 		}
 
+		// Booking mappings
 		public static BookingViewModel ToViewModel(this Booking booking)
 		{
-			var eventDate = booking.Event?.Date ?? DateTime.MinValue;
-			var canCancel = eventDate > DateTime.Now.AddDays(1);
+			var isPastEvent = booking.Event.Date < DateTime.Now;
 
 			return new BookingViewModel
 			{
 				Id = booking.Id,
 				BookingDate = booking.BookingDate,
 				TicketsCount = booking.TicketsCount,
-				TotalPrice = booking.TicketsCount * (booking.Event?.TicketPrice ?? 0),
+				TotalPrice = booking.TicketsCount * booking.Event.TicketPrice,
 				EventId = booking.EventId,
-				EventTitle = booking.Event?.Title ?? "Unknown",
-				EventOrganizer = booking.Event?.Organizer ?? "Unknown",
-				EventDate = eventDate,
-				TicketPrice = booking.Event?.TicketPrice ?? 0,
-				EventImageUrl = booking.Event?.ImageUrl,
-				VenueName = booking.Event?.Venue?.Name ?? "Unknown",
-				VenueAddress = booking.Event?.Venue?.Address ?? "Unknown",
-				CanCancel = canCancel,
-				StatusBadgeClass = eventDate > DateTime.Now ? "bg-success" : "bg-secondary",
-				StatusText = eventDate > DateTime.Now ? "Confirmed" : "Completed"
+				EventTitle = booking.Event.Title,
+				EventOrganizer = booking.Event.Organizer,
+				EventDate = booking.Event.Date,
+				TicketPrice = booking.Event.TicketPrice,
+				EventImageUrl = booking.Event.ImageUrl,
+				VenueName = booking.Event.Venue?.Name ?? "Unknown",
+				VenueAddress = booking.Event.Venue?.Address ?? "Unknown",
+				CanCancel = !isPastEvent,
+				StatusBadgeClass = isPastEvent ? "bg-secondary" : "bg-success",
+				StatusText = isPastEvent ? "Past Event" : "Confirmed"
 			};
 		}
 
@@ -95,15 +96,15 @@ namespace EventHub.Web.Extensions
 				BookingId = booking.Id,
 				BookingDate = booking.BookingDate,
 				TicketsCount = booking.TicketsCount,
-				TotalPrice = booking.TicketsCount * (booking.Event?.TicketPrice ?? 0),
+				TotalPrice = booking.TicketsCount * booking.Event.TicketPrice,
 				EventId = booking.EventId,
-				EventTitle = booking.Event?.Title ?? "Unknown",
-				EventOrganizer = booking.Event?.Organizer ?? "Unknown",
-				EventDate = booking.Event?.Date ?? DateTime.MinValue,
-				EventImageUrl = booking.Event?.ImageUrl,
-				VenueName = booking.Event?.Venue?.Name ?? "Unknown",
-				VenueAddress = booking.Event?.Venue?.Address ?? "Unknown",
-				ConfirmationNumber = $"EVT-{booking.Id:D6}",
+				EventTitle = booking.Event.Title,
+				EventOrganizer = booking.Event.Organizer,
+				EventDate = booking.Event.Date,
+				EventImageUrl = booking.Event.ImageUrl,
+				VenueName = booking.Event.Venue?.Name ?? "Unknown",
+				VenueAddress = booking.Event.Venue?.Address ?? "Unknown",
+				ConfirmationNumber = $"BK{booking.Id:D6}",
 				UserEmail = userEmail
 			};
 		}
