@@ -1,0 +1,170 @@
+
+@model EventIndexViewModel
+@{
+    ViewData["Title"] = "Events";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1><i class="fas fa-calendar-alt"></i> Browse Events</h1>
+        <p class="lead text-muted">Find your next amazing experience</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label for="searchTerm" class="form-label">Search</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                               placeholder="Search by title, organizer, or venue..." value="@Model.SearchTerm">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="categoryId" class="form-label">Category</label>
+                    <select class="form-select" id="categoryId" name="categoryId" asp-items="Model.CategoriesSelectList">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Filter</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="upcomingOnly" name="upcomingOnly" 
+                               value="true" checked="@Model.UpcomingOnly">
+                        <label class="form-check-label" for="upcomingOnly">
+                            Upcoming Only
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5>@Model.ResultsMessage</h5>
+    @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.CategoryId.HasValue)
+    {
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-times"></i> Clear Filters
+        </a>
+    }
+</div>
+
+@if (Model.HasResults)
+{
+    <div class="row g-4">
+        @foreach (var eventItem in Model.Events)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm hover-lift">
+                    @if (!string.IsNullOrEmpty(eventItem.ImageUrl))
+                    {
+                        <img src="@eventItem.ImageUrl" class="card-img-top" alt="@eventItem.Title" 
+                             style="height: 200px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" 
+                             style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-calendar-day fa-4x text-white opacity-50"></i>
+                        </div>
+                    }
+                    
+                    @if (eventItem.IsPastEvent)
+                    {
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-secondary">Past Event</span>
+                        </div>
+                    }
+                    else if (!eventItem.IsBookable)
+                    {
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-danger">Sold Out</span>
+                        </div>
+                    }
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">@eventItem.Title</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> @eventItem.Organizer
+                            </small>
+                        </p>
+                        <p class="card-text">
+                            <small>@(eventItem.Description.Length > 100 ? eventItem.Description.Substring(0, 100) + "..." : eventItem.Description)</small>
+                        </p>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span><i class="fas fa-calendar text-primary"></i> @eventItem.Date.ToString("MMM dd, yyyy")</span>
+                                <span><i class="fas fa-clock text-primary"></i> @eventItem.Date.ToString("h:mm tt")</span>
+                            </div>
+                            <div>
+                                <i class="fas fa-map-marker-alt text-danger"></i> 
+                                <small>@eventItem.VenueName</small>
+                            </div>
+                        </div>
+                        
+                        @if (eventItem.CategoryNames.Any())
+                        {
+                            <div class="mb-2">
+                                @foreach (var category in eventItem.CategoryNames.Take(3))
+                                {
+                                    <span class="badge bg-secondary me-1">@category</span>
+                                }
+                            </div>
+                        }
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0 text-success">@eventItem.FormattedPrice</span>
+                            <small class="text-muted">
+                                <i class="fas fa-ticket-alt"></i> @eventItem.AvailableTickets available
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-white border-0">
+                        <a asp-action="Details" asp-route-id="@eventItem.Id" class="btn btn-primary w-100">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+        <h3>No Events Found</h3>
+        <p class="text-muted">Try adjusting your search or filter criteria</p>
+        <a asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-redo"></i> View All Events
+        </a>
+    </div>
+}
+
+@section Scripts {
+    <style>
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+        }
+    </style>
+}
