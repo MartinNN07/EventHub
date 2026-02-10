@@ -20,6 +20,25 @@ namespace EventHub.Data
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
-        }
+
+			// many to many 
+			builder.Entity<Event>()
+				.HasMany(e => e.Categories)
+				.WithMany(c => c.Events)
+				.UsingEntity(j => j.ToTable("EventCategories"));
+
+			// deleting behaiviour restriction
+			builder.Entity<Booking>()
+				.HasOne(b => b.Event)
+				.WithMany(e => e.Bookings)
+				.HasForeignKey(b => b.EventId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.Entity<Booking>()
+				.HasOne(b => b.Buyer)
+				.WithMany(u => u.Bookings)
+				.HasForeignKey(b => b.BuyerId)
+				.OnDelete(DeleteBehavior.Restrict);
+		}
 	}
 }
