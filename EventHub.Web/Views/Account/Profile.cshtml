@@ -1,16 +1,16 @@
 @model EventHub.Web.Models.UserProfileViewModel
 
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "Моят профил";
 }
 
 <div class="container my-5">
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h1 class="display-4 text-gradient mb-3">
-                <i class="bi bi-person-circle"></i> My Profile
+                <i class="bi bi-person-circle"></i> Моят профил
             </h1>
-            <p class="lead mb-4">Manage your account settings and information</p>
+            <p class="lead mb-4">Управлявайте своя профил</p>
 
             @if (TempData["Success"] != null)
             {
@@ -26,7 +26,7 @@
                         <div class="card-body">
                             <i class="bi bi-ticket-perforated text-gradient" style="font-size: 2.5rem;"></i>
                             <h3 class="mt-2 mb-0">@Model.TotalBookings</h3>
-                            <p class="text-muted mb-0">Total Bookings</p>
+                            <p class="text-muted mb-0">Общ брой резервации</p>
                         </div>
                     </div>
                 </div>
@@ -35,25 +35,7 @@
                         <div class="card-body">
                             <i class="bi bi-calendar-event text-gradient" style="font-size: 2.5rem;"></i>
                             <h3 class="mt-2 mb-0">@Model.UpcomingEvents</h3>
-                            <p class="text-muted mb-0">Upcoming Events</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 text-center">
-                        <div class="card-body">
-                            <i class="bi bi-calendar-check text-gradient" style="font-size: 2.5rem;"></i>
-                            <h3 class="mt-2 mb-0">
-                                @if (Model.MemberSince.HasValue)
-                                {
-                                    @((DateTime.Now - Model.MemberSince.Value).Days)
-                                }
-                                else
-                                {
-                                    <text>0</text>
-                                }
-                            </h3>
-                            <p class="text-muted mb-0">Days Member</p>
+                            <p class="text-muted mb-0">Идващи събития</p>
                         </div>
                     </div>
                 </div>
@@ -62,7 +44,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-light py-3">
                     <h4 class="mb-0">
-                        <i class="bi bi-person-badge"></i> Personal Information
+                        <i class="bi bi-person-badge"></i> Лична информация
                     </h4>
                 </div>
                 <div class="card-body p-4">
@@ -78,14 +60,14 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label asp-for="FirstName" class="form-label">
-                                    <i class="bi bi-person"></i> First Name
+                                    <i class="bi bi-person"></i> Първо име
                                 </label>
                                 <input asp-for="FirstName" class="form-control" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="LastName" class="form-label">
-                                    <i class="bi bi-person"></i> Last Name
+                                    <i class="bi bi-person"></i> Фамилия
                                 </label>
                                 <input asp-for="LastName" class="form-control" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
@@ -94,7 +76,7 @@
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label">
-                                <i class="bi bi-envelope"></i> Email Address
+                                <i class="bi bi-envelope"></i> Имейл
                             </label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
@@ -102,7 +84,7 @@
 
                         <div class="mb-4">
                             <label asp-for="PhoneNumber" class="form-label">
-                                <i class="bi bi-telephone"></i> Phone Number (Optional)
+                                <i class="bi bi-telephone"></i> Телефон (по избор)
                             </label>
                             <input asp-for="PhoneNumber" class="form-control" placeholder="+1 (555) 123-4567" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -110,7 +92,7 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> Update Profile
+                                <i class="bi bi-check-circle"></i> Актуализирай профил
                             </button>
                         </div>
                     </form>
@@ -121,17 +103,17 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-light py-3">
                     <h4 class="mb-0">
-                        <i class="bi bi-shield-lock"></i> Security
+                        <i class="bi bi-shield-lock"></i> Сигурност
                     </h4>
                 </div>
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="mb-1">Password</h5>
-                            <p class="text-muted mb-0">Change your account password</p>
+                            <h5 class="mb-1">Парола</h5>
+                            <p class="text-muted mb-0">Променете своята парола</p>
                         </div>
                         <a asp-action="ChangePassword" class="btn btn-outline-primary">
-                            <i class="bi bi-key"></i> Change Password
+                            <i class="bi bi-key"></i> Промени парола
                         </a>
                     </div>
                 </div>
@@ -143,10 +125,10 @@
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-ticket-perforated-fill text-gradient" style="font-size: 3rem;"></i>
-                            <h5 class="mt-3 mb-2">My Bookings</h5>
-                            <p class="text-muted mb-3">View and manage your event bookings</p>
+                            <h5 class="mt-3 mb-2">Моите резервации</h5>
+                            <p class="text-muted mb-3">Прегледайте вашите резервации</p>
                             <a asp-controller="Bookings" asp-action="Index" class="btn btn-outline-primary">
-                                View Bookings
+                                Прегледайте резервации
                             </a>
                         </div>
                     </div>
@@ -155,10 +137,10 @@
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-calendar-event-fill text-gradient" style="font-size: 3rem;"></i>
-                            <h5 class="mt-3 mb-2">Browse Events</h5>
-                            <p class="text-muted mb-3">Discover and book exciting events</p>
+                            <h5 class="mt-3 mb-2">Вижте събития</h5>
+                            <p class="text-muted mb-3">Открийте нови събития</p>
                             <a asp-controller="Events" asp-action="Index" class="btn btn-outline-primary">
-                                Browse Events
+                                Вижте събития
                             </a>
                         </div>
                     </div>
