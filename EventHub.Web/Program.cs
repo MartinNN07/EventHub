@@ -33,9 +33,10 @@ namespace EventHub.Web
 				options.Password.RequireNonAlphanumeric = false;
 				options.Password.RequireUppercase = false;
 			})
-				.AddEntityFrameworkStores<ApplicationDbContext>();
+				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddRoles<Microsoft.AspNetCore.Identity.IdentityRole>();
 
-			builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews();
 
 			var app = builder.Build();
 
@@ -47,7 +48,8 @@ namespace EventHub.Web
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
 					var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
-					await Seeder.SeedAsync(context, userManager);
+					var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+                    await Seeder.SeedAsync(context, userManager, roleManager);
 				}
 				catch (Exception ex)
 				{
@@ -65,10 +67,16 @@ namespace EventHub.Web
 
 			app.UseHttpsRedirection();
 			app.UseRouting();
-			app.UseAuthorization();
+			app.UseAuthentication();
+            app.UseAuthorization();
 			app.MapStaticAssets();
 
 			app.MapControllerRoute(
+                name: "admin",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
+                .WithStaticAssets();
+
+            app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}")
 				.WithStaticAssets();
