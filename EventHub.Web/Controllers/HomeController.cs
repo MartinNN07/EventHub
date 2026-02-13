@@ -1,6 +1,7 @@
 using EventHub.Services.Interfaces;
 using EventHub.Web.Extensions;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Event;
+using EventHub.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventHub.Web.Controllers

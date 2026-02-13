@@ -1,7 +1,7 @@
 using EventHub.Common;
 using EventHub.Data.Models;
 using EventHub.Services.Interfaces;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Venue;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -127,6 +127,11 @@ namespace EventHub.Web.Areas.Admin.Controllers
 
 			if (!ModelState.IsValid)
 			{
+				var venue = await _venueService.GetVenueWithEventsAsync(id);
+				if (venue != null)
+				{
+					model.EventCount = venue.Events?.Count ?? 0;
+				}
 				return View(model);
 			}
 

@@ -1,13 +1,14 @@
+@using EventHub.Web.Models.Event
 
 @model EventIndexViewModel
 @{
-    ViewData["Title"] = "Events";
+    ViewData["Title"] = "Събития";
 }
 
 <div class="row mb-4">
     <div class="col-md-12">
-        <h1><i class="fas fa-calendar-alt"></i> Browse Events</h1>
-        <p class="lead text-muted">Find your next amazing experience</p>
+        <h1><i class="fas fa-calendar-alt"></i> Разгледайте събития</h1>
+        <p class="lead text-muted">Намерете следващото си невероятно преживяване</p>
     </div>
 </div>
 
@@ -16,26 +17,26 @@
         <form asp-action="Index" method="get">
             <div class="row g-3">
                 <div class="col-md-5">
-                    <label for="searchTerm" class="form-label">Search</label>
+                    <label for="searchTerm" class="form-label">Търсене</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
-                               placeholder="Search by title, organizer, or venue..." value="@Model.SearchTerm">
+                        <input type="text" class="form-control" id="searchTerm" name="searchTerm"
+                               placeholder="Търсете по заглавие, организатор или място..." value="@Model.SearchTerm">
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <label for="categoryId" class="form-label">Category</label>
+                    <label for="categoryId" class="form-label">Категория</label>
                     <select class="form-select" id="categoryId" name="categoryId" asp-items="Model.CategoriesSelectList">
-                        <option value="">All Categories</option>
+                        <option value="">Всички категории</option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Filter</label>
+                    <label class="form-label">Филтър</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="upcomingOnly" name="upcomingOnly" 
+                        <input class="form-check-input" type="checkbox" id="upcomingOnly" name="upcomingOnly"
                                value="true" checked="@Model.UpcomingOnly">
                         <label class="form-check-label" for="upcomingOnly">
-                            Upcoming Only
+                            Само предстоящи
                         </label>
                     </div>
                 </div>
@@ -43,7 +44,7 @@
                     <label class="form-label">&nbsp;</label>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Apply Filters
+                            <i class="fas fa-filter"></i> Приложи филтри
                         </button>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
     @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.CategoryId.HasValue)
     {
         <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-times"></i> Clear Filters
+            <i class="fas fa-times"></i> Изчисти филтрите
         </a>
     }
 </div>
@@ -71,30 +72,30 @@
                 <div class="card h-100 shadow-sm hover-lift">
                     @if (!string.IsNullOrEmpty(eventItem.ImageUrl))
                     {
-                        <img src="@eventItem.ImageUrl" class="card-img-top" alt="@eventItem.Title" 
+                        <img src="@eventItem.ImageUrl" class="card-img-top" alt="@eventItem.Title"
                              style="height: 200px; object-fit: cover;">
                     }
                     else
                     {
-                        <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" 
+                        <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center"
                              style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                             <i class="fas fa-calendar-day fa-4x text-white opacity-50"></i>
                         </div>
                     }
-                    
+
                     @if (eventItem.IsPastEvent)
                     {
                         <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-secondary">Past Event</span>
+                            <span class="badge bg-secondary">Минало събитие</span>
                         </div>
                     }
                     else if (!eventItem.IsBookable)
                     {
                         <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-danger">Sold Out</span>
+                            <span class="badge bg-danger">Разпродадено</span>
                         </div>
                     }
-                    
+
                     <div class="card-body">
                         <h5 class="card-title">@eventItem.Title</h5>
                         <p class="card-text">
@@ -105,18 +106,18 @@
                         <p class="card-text">
                             <small>@(eventItem.Description.Length > 100 ? eventItem.Description.Substring(0, 100) + "..." : eventItem.Description)</small>
                         </p>
-                        
+
                         <div class="mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span><i class="fas fa-calendar text-primary"></i> @eventItem.Date.ToString("MMM dd, yyyy")</span>
                                 <span><i class="fas fa-clock text-primary"></i> @eventItem.Date.ToString("h:mm tt")</span>
                             </div>
                             <div>
-                                <i class="fas fa-map-marker-alt text-danger"></i> 
+                                <i class="fas fa-map-marker-alt text-danger"></i>
                                 <small>@eventItem.VenueName</small>
                             </div>
                         </div>
-                        
+
                         @if (eventItem.CategoryNames.Any())
                         {
                             <div class="mb-2">
@@ -126,18 +127,18 @@
                                 }
                             </div>
                         }
-                        
+
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="h5 mb-0 text-success">@eventItem.FormattedPrice</span>
                             <small class="text-muted">
-                                <i class="fas fa-ticket-alt"></i> @eventItem.AvailableTickets available
+                                <i class="fas fa-ticket-alt"></i> @eventItem.AvailableTickets налични
                             </small>
                         </div>
                     </div>
-                    
+
                     <div class="card-footer bg-white border-0">
                         <a asp-action="Details" asp-route-id="@eventItem.Id" class="btn btn-primary w-100">
-                            <i class="fas fa-info-circle"></i> View Details
+                            <i class="fas fa-info-circle"></i> Вижте детайли
                         </a>
                     </div>
                 </div>
@@ -149,10 +150,10 @@ else
 {
     <div class="text-center py-5">
         <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
-        <h3>No Events Found</h3>
-        <p class="text-muted">Try adjusting your search or filter criteria</p>
+        <h3>Не са намерени събития</h3>
+        <p class="text-muted">Опитайте да промените критериите за търсене или филтриране</p>
         <a asp-action="Index" class="btn btn-primary">
-            <i class="fas fa-redo"></i> View All Events
+            <i class="fas fa-redo"></i> Вижте всички събития
         </a>
     </div>
 }
@@ -162,9 +163,10 @@ else
         .hover-lift {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .hover-lift:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-        }
+
+            .hover-lift:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+            }
     </style>
 }

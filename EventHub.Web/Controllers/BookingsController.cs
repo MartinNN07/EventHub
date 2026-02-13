@@ -1,6 +1,6 @@
 using EventHub.Services.Interfaces;
 using EventHub.Web.Extensions;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

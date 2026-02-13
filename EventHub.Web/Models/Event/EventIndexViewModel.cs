@@ -1,6 +1,7 @@
+using EventHub.Web.Models.Category;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.Event
 {
 	public class EventIndexViewModel
 	{

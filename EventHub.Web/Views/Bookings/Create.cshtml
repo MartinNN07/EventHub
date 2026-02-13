@@ -1,7 +1,8 @@
-@model EventHub.Web.Models.CreateBookingViewModel
+@using EventHub.Web.Models.Booking
+@model CreateBookingViewModel
 
 @{
-    ViewData["Title"] = "Book Event";
+    ViewData["Title"] = "Резервиране на събитие";
 }
 
 <div class="container my-5">
@@ -9,14 +10,14 @@
         <div class="col-md-8 mx-auto">
             <div class="mb-4">
                 <a href="@Url.Action("Details", "Events", new { id = Model.EventId })" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Event
+                    <i class="bi bi-arrow-left"></i> Назад към събитието
                 </a>
             </div>
 
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-gradient text-white py-3">
                     <h2 class="mb-0">
-                        <i class="bi bi-ticket-perforated"></i> Book Your Tickets
+                        <i class="bi bi-ticket-perforated"></i> Резервирайте вашите билети
                     </h2>
                 </div>
                 <div class="card-body p-4">
@@ -24,14 +25,14 @@
                     {
                         <div class="alert alert-danger">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <strong>Event Sold Out</strong> - There are no tickets available for this event.
+                            <strong>Събитието е разпродадено</strong> - Няма налични билети за това събитие.
                         </div>
                     }
                     else if (Model.IsEventPassed)
                     {
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <strong>Event Has Passed</strong> - This event has already occurred.
+                            <strong>Събитието е минало</strong> - Това събитие вече е проведено.
                         </div>
                     }
                     else
@@ -53,25 +54,25 @@
                                 <h3 class="text-gradient mb-3">@Model.EventTitle</h3>
                                 <p class="mb-2">
                                     <i class="bi bi-person text-primary"></i>
-                                    <strong>Organizer:</strong> @Model.EventOrganizer
+                                    <strong>Организатор:</strong> @Model.EventOrganizer
                                 </p>
                                 <p class="mb-2">
                                     <i class="bi bi-calendar3 text-primary"></i>
-                                    <strong>Date:</strong> @Model.EventDate.ToString("dddd, MMMM dd, yyyy")
+                                    <strong>Дата:</strong> @Model.EventDate.ToString("dddd, MMMM dd, yyyy")
                                 </p>
                                 <p class="mb-2">
                                     <i class="bi bi-clock text-primary"></i>
-                                    <strong>Time:</strong> @Model.EventDate.ToString("h:mm tt")
+                                    <strong>Час:</strong> @Model.EventDate.ToString("h:mm tt")
                                 </p>
                                 <p class="mb-2">
                                     <i class="bi bi-geo-alt text-primary"></i>
-                                    <strong>Venue:</strong> @Model.VenueName
+                                    <strong>Място:</strong> @Model.VenueName
                                     <br>
                                     <small class="text-muted ms-4">@Model.VenueAddress</small>
                                 </p>
                                 <p class="mb-0">
                                     <i class="bi bi-ticket-detailed text-primary"></i>
-                                    <strong>Available Tickets:</strong>
+                                    <strong>Налични билети:</strong>
                                     <span class="badge bg-success" id="availableTicketsDisplay">@Model.AvailableTickets</span>
                                 </p>
                             </div>
@@ -82,22 +83,22 @@
                         <form asp-action="Create" method="post" id="bookingForm">
                             @Html.AntiForgeryToken()
                             <input type="hidden" asp-for="EventId" />
-                            
+
                             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label asp-for="TicketsCount" class="form-label">
-                                        <i class="bi bi-ticket"></i> Number of Tickets
+                                        <i class="bi bi-ticket"></i> Брой билети
                                     </label>
                                     <div class="input-group">
                                         <button type="button" class="btn btn-outline-secondary" id="decreaseBtn">
                                             <i class="bi bi-dash"></i>
                                         </button>
-                                        <input asp-for="TicketsCount" 
-                                               class="form-control text-center" 
+                                        <input asp-for="TicketsCount"
+                                               class="form-control text-center"
                                                id="ticketsInput"
-                                               min="1" 
+                                               min="1"
                                                max="@Model.AvailableTickets"
                                                data-max-tickets="@Model.AvailableTickets"
                                                data-event-id="@Model.EventId" />
@@ -106,31 +107,31 @@
                                         </button>
                                     </div>
                                     <span asp-validation-for="TicketsCount" class="text-danger"></span>
-                                    <small class="form-text text-muted">Maximum 20 tickets per booking</small>
+                                    <small class="form-text text-muted">Максимум 20 билета на резервация</small>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Ticket Price</label>
+                                    <label class="form-label">Цена на билет</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light">
-                                            <i class="bi bi-currency-dollar"></i>
+                                            <i class="bi bi-currency-euro"></i>
                                         </span>
                                         <input type="text" class="form-control" value="@Model.TicketPrice.ToString("N2")" readonly>
-                                        <span class="input-group-text bg-light">per ticket</span>
+                                        <span class="input-group-text bg-light">на билет</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card bg-light mb-4">
                                 <div class="card-body">
-                                    <h5 class="mb-3">Order Summary</h5>
+                                    <h5 class="mb-3">Обобщение на поръчката</h5>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Tickets (<span id="ticketCount">@Model.TicketsCount</span>)</span>
+                                        <span>Билети (<span id="ticketCount">@Model.TicketsCount</span>)</span>
                                         <span id="subtotal">@Model.TotalPrice.ToString("C")</span>
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-between">
-                                        <strong class="h5 mb-0">Total</strong>
+                                        <strong class="h5 mb-0">Общо</strong>
                                         <strong class="h5 mb-0 text-gradient" id="totalPrice">@Model.TotalPrice.ToString("C")</strong>
                                     </div>
                                 </div>
@@ -144,33 +145,16 @@
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
                                     <i class="bi bi-credit-card me-2"></i>
-                                    Complete Booking
+                                    Завършете резервацията
                                 </button>
                                 <a href="@Url.Action("Details", "Events", new { id = Model.EventId })" class="btn btn-outline-secondary">
-                                    Cancel
+                                    Отказ
                                 </a>
                             </div>
                         </form>
                     }
                 </div>
             </div>
-
-            @if (Model.IsAvailable && !Model.IsEventPassed)
-            {
-                <div class="card mt-4 border-0 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="bi bi-info-circle text-primary"></i> Booking Information
-                        </h5>
-                        <ul class="mb-0">
-                            <li>Tickets are non-refundable but can be cancelled up to 24 hours before the event</li>
-                            <li>You will receive a confirmation email with your booking details</li>
-                            <li>Please arrive at least 15 minutes before the event starts</li>
-                            <li>Bring a valid ID for entry verification</li>
-                        </ul>
-                    </div>
-                </div>
-            }
         </div>
     </div>
 </div>
@@ -201,7 +185,7 @@
                 const total = tickets * ticketPrice;
 
                 ticketCountDisplay.textContent = tickets;
-                const formattedTotal = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const formattedTotal = total.toLocaleString('bg-Bg', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
                 subtotalDisplay.textContent = formattedTotal;
                 totalPriceDisplay.textContent = formattedTotal;
             }

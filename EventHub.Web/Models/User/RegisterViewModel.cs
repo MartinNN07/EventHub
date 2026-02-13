@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.User
 {
-	public class UserProfileViewModel
+	public class RegisterViewModel
 	{
-		public string UserId { get; set; } = null!;
-
 		[Required(ErrorMessage = "First name is required")]
 		[StringLength(50, ErrorMessage = "First name cannot exceed 50 characters")]
 		[Display(Name = "First Name")]
@@ -21,12 +19,19 @@ namespace EventHub.Web.Models
 		[Display(Name = "Email")]
 		public string Email { get; set; } = null!;
 
-		[Display(Name = "Phone Number")]
-		[Phone(ErrorMessage = "Invalid phone number")]
-		public string? PhoneNumber { get; set; }
+		[Required(ErrorMessage = "Password is required")]
+		[StringLength(100, ErrorMessage = "Password must be at least {2} characters long", MinimumLength = 6)]
+		[DataType(DataType.Password)]
+		[Display(Name = "Password")]
+		public string Password { get; set; } = null!;
 
-		public int TotalBookings { get; set; }
-		public int UpcomingEvents { get; set; }
-		public DateTime? MemberSince { get; set; }
+		[Required(ErrorMessage = "Please confirm your password")]
+		[DataType(DataType.Password)]
+		[Display(Name = "Confirm Password")]
+		[Compare("Password", ErrorMessage = "Passwords do not match")]
+		public string ConfirmPassword { get; set; } = null!;
+
+		[Display(Name = "Remember me")]
+		public bool RememberMe { get; set; }
 	}
 }

@@ -3,6 +3,7 @@ using EventHub.Data.Models;
 using EventHub.Data.Seeding;
 using EventHub.Services.Implementations;
 using EventHub.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Web
@@ -27,16 +28,21 @@ namespace EventHub.Web
 
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-			builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
+			builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
 				options.SignIn.RequireConfirmedAccount = false;
 				options.Password.RequireDigit = false;
 				options.Password.RequireNonAlphanumeric = false;
 				options.Password.RequireUppercase = false;
 			})
 				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddRoles<Microsoft.AspNetCore.Identity.IdentityRole>();
+				.AddDefaultTokenProviders();
 
-            builder.Services.AddControllersWithViews();
+			builder.Services.AddControllersWithViews();
+
+			var cultureInfo = new System.Globalization.CultureInfo("bg-BG");
+			cultureInfo.NumberFormat.CurrencySymbol = "€";
+			System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+			System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 			var app = builder.Build();
 
@@ -47,8 +53,8 @@ namespace EventHub.Web
 				try
 				{
 					var context = services.GetRequiredService<ApplicationDbContext>();
-					var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
-					var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+					var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+					var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     await Seeder.SeedAsync(context, userManager, roleManager);
 				}
 				catch (Exception ex)

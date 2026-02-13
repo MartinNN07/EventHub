@@ -1,3 +1,4 @@
+@using EventHub.Web.Models.Event
 
 @model EventDetailsViewModel
 @{
@@ -8,12 +9,12 @@
     <div class="col-lg-8">
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
-            <img src="@Model.ImageUrl" class="img-fluid rounded mb-4 shadow" alt="@Model.Title" 
+            <img src="@Model.ImageUrl" class="img-fluid rounded mb-4 shadow" alt="@Model.Title"
                  style="width: 100%; height: 400px; object-fit: cover;">
         }
         else
         {
-            <div class="bg-gradient rounded mb-4 shadow d-flex align-items-center justify-content-center" 
+            <div class="bg-gradient rounded mb-4 shadow d-flex align-items-center justify-content-center"
                  style="width: 100%; height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <i class="fas fa-calendar-day fa-5x text-white opacity-50"></i>
             </div>
@@ -25,26 +26,26 @@
                     <div>
                         <h1 class="mb-2">@Model.Title</h1>
                         <p class="text-muted mb-0">
-                            <i class="fas fa-user"></i> Organized by <strong>@Model.Organizer</strong>
+                            <i class="fas fa-user"></i> Организирано от <strong>@Model.Organizer</strong>
                         </p>
                     </div>
                     @if (Model.IsPastEvent)
                     {
-                        <span class="badge bg-secondary fs-6">Past Event</span>
+                        <span class="badge bg-secondary fs-6">Минало събитие</span>
                     }
                     else if (!Model.IsBookable)
                     {
-                        <span class="badge bg-danger fs-6">Sold Out</span>
+                        <span class="badge bg-danger fs-6">Разпродадено</span>
                     }
                     else
                     {
-                        <span class="badge bg-success fs-6">Available</span>
+                        <span class="badge bg-success fs-6">Налично</span>
                     }
                 </div>
 
                 <hr>
 
-                <h4><i class="fas fa-info-circle text-primary"></i> About This Event</h4>
+                <h4><i class="fas fa-info-circle text-primary"></i> За това събитие</h4>
                 <p class="lead">@Model.Description</p>
 
                 <hr>
@@ -52,10 +53,10 @@
                 @if (Model.Categories.Any())
                 {
                     <div class="mb-3">
-                        <h5><i class="fas fa-tags text-info"></i> Categories</h5>
+                        <h5><i class="fas fa-tags text-info"></i> Категории</h5>
                         @foreach (var category in Model.Categories)
                         {
-                            <a asp-controller="Events" asp-action="Index" asp-route-categoryId="@category.Id" 
+                            <a asp-controller="Events" asp-action="Index" asp-route-categoryId="@category.Id"
                                class="badge bg-info text-decoration-none me-2 fs-6">
                                 @category.Name
                             </a>
@@ -67,20 +68,21 @@
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h4><i class="fas fa-map-marker-alt text-danger"></i> Venue Information</h4>
+                <h4><i class="fas fa-map-marker-alt text-danger"></i> Информация за мястото</h4>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <p><strong>Venue Name:</strong><br>@Model.VenueName</p>
-                        <p><strong>Address:</strong><br>@Model.VenueAddress</p>
+                        <p><strong>Име на мястото:</strong><br>@Model.VenueName</p>
+                        <p><strong>Адрес:</strong><br>@Model.VenueAddress</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Capacity:</strong><br>@Model.VenueCapacity people</p>
-                        <p><strong>Availability:</strong><br>
+                        <p><strong>Капацитет:</strong><br>@Model.VenueCapacity души</p>
+                        <p>
+                            <strong>Наличност:</strong><br>
                             <div class="progress" style="height: 25px;">
-                                <div class="progress-bar @(Model.BookingPercentage > 80 ? "bg-danger" : Model.BookingPercentage > 50 ? "bg-warning" : "bg-success")" 
-                                     role="progressbar" style="width: @Model.BookingPercentage%;" 
+                                <div class="progress-bar @(Model.BookingPercentage > 80 ? "bg-danger" : Model.BookingPercentage > 50 ? "bg-warning" : "bg-success")"
+                                     role="progressbar" style="width: @Model.BookingPercentage%;"
                                      aria-valuenow="@Model.BookingPercentage" aria-valuemin="0" aria-valuemax="100">
-                                    @Model.BookingPercentage% Booked
+                                    @Model.BookingPercentage% Резервирани
                                 </div>
                             </div>
                         </p>
@@ -95,25 +97,25 @@
             <div class="card-body">
                 <div class="text-center mb-4">
                     <h2 class="text-primary mb-0">@Model.FormattedPrice</h2>
-                    <small class="text-muted">per ticket</small>
+                    <small class="text-muted">на билет</small>
                 </div>
 
                 <hr>
 
                 <div class="mb-3">
-                    <h5><i class="fas fa-calendar-day text-primary"></i> Date & Time</h5>
+                    <h5><i class="fas fa-calendar-day text-primary"></i> Дата и час</h5>
                     <p class="mb-1"><strong>@Model.FormattedDate</strong></p>
                     <p class="text-muted">@Model.FormattedTime</p>
                 </div>
 
                 <div class="mb-3">
-                    <h5><i class="fas fa-ticket-alt text-success"></i> Availability</h5>
+                    <h5><i class="fas fa-ticket-alt text-success"></i> Наличност</h5>
                     <p class="mb-1">
                         <strong class="@(Model.AvailableTickets < 10 ? "text-danger" : "text-success")">
-                            @Model.AvailableTickets tickets available
+                            @Model.AvailableTickets налични билета
                         </strong>
                     </p>
-                    <p class="text-muted small">@Model.TotalBookedTickets already booked</p>
+                    <p class="text-muted small">@Model.TotalBookedTickets вече резервирани</p>
                 </div>
 
                 <hr>
@@ -122,38 +124,38 @@
                 {
                     @if (Model.IsBookable && !Model.IsPastEvent)
                     {
-                        <a asp-controller="Bookings" asp-action="Create" asp-route-eventId="@Model.Id" 
+                        <a asp-controller="Bookings" asp-action="Create" asp-route-eventId="@Model.Id"
                            class="btn btn-primary btn-lg w-100 mb-2">
-                            <i class="fas fa-shopping-cart"></i> Book Now
+                            <i class="fas fa-shopping-cart"></i> Резервирай сега
                         </a>
                     }
                     else if (Model.IsPastEvent)
                     {
                         <button class="btn btn-secondary btn-lg w-100 mb-2" disabled>
-                            <i class="fas fa-clock"></i> Event Has Passed
+                            <i class="fas fa-clock"></i> Събитието е минало
                         </button>
                     }
                     else
                     {
                         <button class="btn btn-danger btn-lg w-100 mb-2" disabled>
-                            <i class="fas fa-times-circle"></i> Sold Out
+                            <i class="fas fa-times-circle"></i> Разпродадено
                         </button>
                     }
                 }
                 else
                 {
-                    <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Details", "Events", new { id = Model.Id })" 
+                    <a href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Details", "Events", new { id = Model.Id }) })"
                        class="btn btn-outline-primary btn-lg w-100 mb-2">
-                        <i class="fas fa-sign-in-alt"></i> Login to Book
+                        <i class="fas fa-sign-in-alt"></i> Влезте за резервация
                     </a>
                     <small class="text-muted d-block text-center">
-                        Don't have an account? 
-                        <a asp-area="Identity" asp-page="/Account/Register">Sign up</a>
+                        Нямате акаунт?
+                        <a href="@Url.Action("Register", "Account")">Регистрирайте се</a>
                     </small>
                 }
 
                 <a asp-controller="Events" asp-action="Index" class="btn btn-outline-secondary w-100">
-                    <i class="fas fa-arrow-left"></i> Back to Events
+                    <i class="fas fa-arrow-left"></i> Назад към събитията
                 </a>
             </div>
         </div>
@@ -161,8 +163,8 @@
         @if (Model.AvailableTickets < 50 && Model.AvailableTickets > 0)
         {
             <div class="alert alert-warning mt-3">
-                <i class="fas fa-exclamation-triangle"></i> 
-                <strong>Limited Availability!</strong> Only @Model.AvailableTickets tickets left.
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Ограничена наличност!</strong> Остават само @Model.AvailableTickets билета.
             </div>
         }
     </div>

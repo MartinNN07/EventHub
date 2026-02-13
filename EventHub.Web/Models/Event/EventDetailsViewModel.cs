@@ -1,4 +1,6 @@
-namespace EventHub.Web.Models
+using EventHub.Web.Models.Category;
+
+namespace EventHub.Web.Models.Event
 {
 	public class EventDetailsViewModel
 	{
@@ -20,7 +22,7 @@ namespace EventHub.Web.Models
 		public bool IsPastEvent => Date < DateTime.Now;
 		public string FormattedDate => Date.ToString("dddd, MMMM dd, yyyy");
 		public string FormattedTime => Date.ToString("h:mm tt");
-		public string FormattedPrice => TicketPrice == 0 ? "Free" : $"${TicketPrice:F2}";
+		public string FormattedPrice => TicketPrice == 0 ? "Безплатно" : $"€{TicketPrice:F2}";
 		public int BookingPercentage => VenueCapacity > 0 
 			? (int)((double)TotalBookedTickets / VenueCapacity * 100) 
 			: 0;

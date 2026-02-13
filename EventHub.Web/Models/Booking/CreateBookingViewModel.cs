@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.Booking
 {
 	public class CreateBookingViewModel
 	{

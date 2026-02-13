@@ -1,7 +1,7 @@
 using EventHub.Common;
 using EventHub.Data.Models;
 using EventHub.Services.Interfaces;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

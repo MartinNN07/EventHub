@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.Event
 {
 	public class EventViewModel
 	{
@@ -41,6 +41,6 @@ namespace EventHub.Web.Models
 		public bool IsBookable { get; set; }
 		public bool IsPastEvent => Date < DateTime.Now;
 		public string FormattedDate => Date.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt");
-		public string FormattedPrice => TicketPrice == 0 ? "Free" : $"${TicketPrice:F2}";
+		public string FormattedPrice => TicketPrice == 0 ? "Безплатно" : $"€{TicketPrice:F2}";
 	}
 }

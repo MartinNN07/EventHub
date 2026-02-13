@@ -1,5 +1,8 @@
 using EventHub.Data.Models;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Booking;
+using EventHub.Web.Models.Category;
+using EventHub.Web.Models.Event;
+using EventHub.Web.Models.Venue;
 
 namespace EventHub.Web.Extensions
 {
@@ -54,6 +57,22 @@ namespace EventHub.Web.Extensions
 			};
 		}
 
+		public static AdminEventViewModel ToAdminViewModel(this Event eventEntity)
+		{
+			return new AdminEventViewModel
+			{
+				Id = eventEntity.Id,
+				Title = eventEntity.Title,
+				Organizer = eventEntity.Organizer,
+				Date = eventEntity.Date,
+				TicketPrice = eventEntity.TicketPrice,
+				VenueName = eventEntity.Venue?.Name ?? "Unknown",
+				CategoryNames = eventEntity.Categories?.Select(c => c.Name).ToList() ?? new List<string>(),
+				TotalBookings = eventEntity.Bookings?.Sum(b => b.TicketsCount) ?? 0
+			};
+		}
+
+		// Category mappings
 		public static CategoryViewModel ToViewModel(this Category category)
 		{
 			return new CategoryViewModel
@@ -61,6 +80,58 @@ namespace EventHub.Web.Extensions
 				Id = category.Id,
 				Name = category.Name,
 				EventCount = category.Events?.Count ?? 0
+			};
+		}
+
+		public static CreateCategoryViewModel ToCreateViewModel(this Category category)
+		{
+			return new CreateCategoryViewModel
+			{
+				Name = category.Name
+			};
+		}
+
+		public static EditCategoryViewModel ToEditViewModel(this Category category)
+		{
+			return new EditCategoryViewModel
+			{
+				Id = category.Id,
+				Name = category.Name
+			};
+		}
+
+		// Venue mappings
+		public static VenueViewModel ToViewModel(this Venue venue)
+		{
+			return new VenueViewModel
+			{
+				Id = venue.Id,
+				Name = venue.Name,
+				Address = venue.Address,
+				Capacity = venue.Capacity,
+				EventCount = venue.Events?.Count ?? 0
+			};
+		}
+
+		public static CreateVenueViewModel ToCreateViewModel(this Venue venue)
+		{
+			return new CreateVenueViewModel
+			{
+				Name = venue.Name,
+				Address = venue.Address,
+				Capacity = venue.Capacity
+			};
+		}
+
+		public static EditVenueViewModel ToEditViewModel(this Venue venue)
+		{
+			return new EditVenueViewModel
+			{
+				Id = venue.Id,
+				Name = venue.Name,
+				Address = venue.Address,
+				Capacity = venue.Capacity,
+				EventCount = venue.Events?.Count ?? 0
 			};
 		}
 

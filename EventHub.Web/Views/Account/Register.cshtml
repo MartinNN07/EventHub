@@ -1,7 +1,8 @@
-@model EventHub.Web.Models.RegisterViewModel
+@using EventHub.Web.Models.User
+@model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Регистрация";
 }
 
 <div class="container my-5">
@@ -10,9 +11,9 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-gradient text-white py-4 text-center">
                     <h2 class="mb-0">
-                        <i class="bi bi-person-plus-fill"></i> Create Account
+                        <i class="bi bi-person-plus-fill"></i> Създаване на акаунт
                     </h2>
-                    <p class="mb-0 mt-2">Join EventHub to book amazing events</p>
+                    <p class="mb-0 mt-2">Присъединете се към EventHub, за да резервирате невероятни събития</p>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Register" method="post">
@@ -22,44 +23,44 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label asp-for="FirstName" class="form-label">
-                                    <i class="bi bi-person"></i> First Name
+                                    <i class="bi bi-person"></i> Първо име
                                 </label>
-                                <input asp-for="FirstName" class="form-control" placeholder="John" />
+                                <input asp-for="FirstName" class="form-control" placeholder="Иван" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="LastName" class="form-label">
-                                    <i class="bi bi-person"></i> Last Name
+                                    <i class="bi bi-person"></i> Фамилия
                                 </label>
-                                <input asp-for="LastName" class="form-control" placeholder="Doe" />
+                                <input asp-for="LastName" class="form-control" placeholder="Иванов" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label">
-                                <i class="bi bi-envelope"></i> Email Address
+                                <i class="bi bi-envelope"></i> Имейл адрес
                             </label>
-                            <input asp-for="Email" class="form-control" placeholder="john.doe@example.com" />
+                            <input asp-for="Email" class="form-control" placeholder="ivan.ivanov@example.com" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label">
-                                <i class="bi bi-lock"></i> Password
+                                <i class="bi bi-lock"></i> Парола
                             </label>
-                            <input asp-for="Password" class="form-control" placeholder="Enter password (min 6 characters)" />
+                            <input asp-for="Password" class="form-control" placeholder="Въведете парола (минимум 6 символа)" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                             <small class="form-text text-muted">
-                                Password must be at least 6 characters long
+                                Паролата трябва да бъде поне 6 символа
                             </small>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="ConfirmPassword" class="form-label">
-                                <i class="bi bi-lock-fill"></i> Confirm Password
+                                <i class="bi bi-lock-fill"></i> Потвърдете паролата
                             </label>
-                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter password" />
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Въведете паролата отново" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
 
@@ -67,22 +68,22 @@
                             <div class="form-check">
                                 <input asp-for="RememberMe" class="form-check-input" />
                                 <label asp-for="RememberMe" class="form-check-label">
-                                    Keep me signed in
+                                    Запази ме влезнал
                                 </label>
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 mb-3">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-person-plus"></i> Create Account
+                                <i class="bi bi-person-plus"></i> Създай акаунт
                             </button>
                         </div>
 
                         <div class="text-center">
                             <p class="mb-0">
-                                Already have an account? 
+                                Вече имате акаунт?
                                 <a asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="text-decoration-none">
-                                    <strong>Sign in</strong>
+                                    <strong>Влезте</strong>
                                 </a>
                             </p>
                         </div>
@@ -94,5 +95,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

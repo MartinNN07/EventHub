@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using EventHub.Web.Models.Category;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.Event
 {
 	public class AdminEventViewModel
 	{
@@ -15,7 +16,7 @@ namespace EventHub.Web.Models
 		public int TotalBookings { get; set; }
 		public bool IsPastEvent => Date < DateTime.Now;
 		public string FormattedDate => Date.ToString("MMM dd, yyyy h:mm tt");
-		public string FormattedPrice => TicketPrice == 0 ? "Free" : $"${TicketPrice:F2}";
+		public string FormattedPrice => TicketPrice == 0 ? "Безплатно" : $"€{TicketPrice:F2}";
 	}
 
 	public class CreateEventViewModel

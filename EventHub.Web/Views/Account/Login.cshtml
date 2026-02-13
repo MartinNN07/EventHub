@@ -1,7 +1,8 @@
-@model EventHub.Web.Models.LoginViewModel
+@using EventHub.Web.Models.User
+@model LoginViewModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Вход";
 }
 
 <div class="container my-5">
@@ -10,35 +11,35 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-gradient text-white py-4 text-center">
                     <h2 class="mb-0">
-                        <i class="bi bi-box-arrow-in-right"></i> Welcome Back
+                        <i class="bi bi-box-arrow-in-right"></i> Добре дошли отново
                     </h2>
-                    <p class="mb-0 mt-2">Sign in to your EventHub account</p>
+                    <p class="mb-0 mt-2">Влезте в своя EventHub акаунт</p>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Login" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="ReturnUrl" />
-                        
+
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label">
-                                <i class="bi bi-envelope"></i> Email Address
+                                <i class="bi bi-envelope"></i> Имейл адрес
                             </label>
-                            <input asp-for="Email" 
-                                   class="form-control form-control-lg" 
-                                   placeholder="Enter your email"
+                            <input asp-for="Email"
+                                   class="form-control form-control-lg"
+                                   placeholder="Въведете вашия имейл"
                                    autofocus />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label">
-                                <i class="bi bi-lock"></i> Password
+                                <i class="bi bi-lock"></i> Парола
                             </label>
-                            <input asp-for="Password" 
-                                   class="form-control form-control-lg" 
-                                   placeholder="Enter your password" />
+                            <input asp-for="Password"
+                                   class="form-control form-control-lg"
+                                   placeholder="Въведете вашата парола" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
@@ -47,20 +48,20 @@
                                 <div class="form-check">
                                     <input asp-for="RememberMe" class="form-check-input" />
                                     <label asp-for="RememberMe" class="form-check-label">
-                                        Remember me
+                                        Запомни ме
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-6 text-end">
                                 <a asp-action="ForgotPassword" class="text-decoration-none">
-                                    Forgot password?
+                                    Забравена парола?
                                 </a>
                             </div>
                         </div>
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                                <i class="bi bi-box-arrow-in-right"></i> Вход
                             </button>
                         </div>
                     </form>
@@ -69,9 +70,9 @@
 
                     <div class="text-center">
                         <p class="mb-0">
-                            Don't have an account? 
+                            Нямате акаунт?
                             <a asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
-                                <strong>Create one now</strong>
+                                <strong>Създайте такъв сега</strong>
                             </a>
                         </p>
                     </div>
@@ -82,5 +83,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

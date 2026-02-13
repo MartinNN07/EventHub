@@ -2,7 +2,7 @@ using EventHub.Common;
 using EventHub.Data.Models;
 using EventHub.Services.Interfaces;
 using EventHub.Web.Extensions;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -268,27 +268,20 @@ namespace EventHub.Web.Areas.Admin.Controllers
 					return View(model);
 				}
 
-				// Get selected categories
-				var selectedCategories = new List<Category>();
-				foreach (var categoryId in model.CategoryIds)
+				var eventToUpdate = new Event
 				{
-					var category = await _categoryService.GetCategoryByIdAsync(categoryId);
-					if (category != null)
-					{
-						selectedCategories.Add(category);
-					}
-				}
+					Id = model.Id,
+					Title = model.Title,
+					Organizer = model.Organizer,
+					Description = model.Description,
+					Date = model.Date,
+					TicketPrice = model.TicketPrice,
+					ImageUrl = model.ImageUrl,
+					VenueId = model.VenueId,
+					Categories = model.CategoryIds.Select(id => new Category { Id = id }).ToList()
+				};
 
-				existingEvent.Title = model.Title;
-				existingEvent.Organizer = model.Organizer;
-				existingEvent.Description = model.Description;
-				existingEvent.Date = model.Date;
-				existingEvent.TicketPrice = model.TicketPrice;
-				existingEvent.ImageUrl = model.ImageUrl;
-				existingEvent.VenueId = model.VenueId;
-				existingEvent.Categories = selectedCategories;
-
-				var result = await _eventService.UpdateEventAsync(existingEvent);
+				var result = await _eventService.UpdateEventAsync(eventToUpdate);
 				if (result == null)
 				{
 					TempData["Error"] = "Event not found.";

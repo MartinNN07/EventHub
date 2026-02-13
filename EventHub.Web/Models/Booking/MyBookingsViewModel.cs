@@ -1,4 +1,4 @@
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.Booking
 {
 	public class MyBookingsViewModel
 	{

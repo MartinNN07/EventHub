@@ -1,6 +1,6 @@
 using EventHub.Services.Interfaces;
 using EventHub.Web.Extensions;
-using EventHub.Web.Models;
+using EventHub.Web.Models.Event;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

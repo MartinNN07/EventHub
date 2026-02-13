@@ -1,4 +1,7 @@
-namespace EventHub.Web.Models
+using EventHub.Web.Models.Category;
+using EventHub.Web.Models.Event;
+
+namespace EventHub.Web.Models.Home
 {
 	public class HomeViewModel
 	{

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EventHub.Web.Models
+namespace EventHub.Web.Models.User
 {
 	public class LoginViewModel
 	{
